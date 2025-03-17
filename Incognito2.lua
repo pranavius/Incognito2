@@ -6,62 +6,109 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Incognito2", true)
 
 local Options = {
 	type = "group",
+	name = "Incognito2",
 	get = function(item) return Incognito2.db.profile[item[#item]] end,
 	set = function(item, value) Incognito2.db.profile[item[#item]] = value end,
 	args = {
-        enable = {	
-            order = 1,
-            type = "toggle",
-            name = L["enable"],
-            desc = L["enable_desc"],
-        },
-		name = {
+		options = {
+			order = 1,
+			type = "group",
+			name = L["general_options"],
+			inline = true,
+			get = function(item) return Incognito2.db.profile[item[#item]] end,
+			set = function(item, value) Incognito2.db.profile[item[#item]] = value end,
+			args = {
+				enable = {	
+					order = 1,
+					type = "toggle",
+					width = "full",
+					name = L["enable"],
+					desc = L["enable_desc"],
+				},
+				name = {
+					order = 2,
+					type = "input",
+					name = L["name"],
+					desc = L["name_desc"],
+				},
+				hideMatchingCharNames = {
+					order = 3,
+					type = "input",
+					width = "full",
+					name = L["hideMatchingCharNames"],
+					desc = L["hideMatchingCharNames_desc"],
+				},
+				hideMatchingCharNamesInfo = {
+					order = 4,
+					type = "description",
+					name = "|cFFff8000" .. L["hideMatchingCharNames_info"] .. "|r"
+				},
+				empty = {
+					order = 5,
+					type = "description",
+					name = " "
+				}
+			}
+		},
+		chatOptions = {
 			order = 2,
-			type = "input",
-			name = L["name"],
-			desc = L["name_desc"],
+			type = "group",
+			name = L["chat_options"],
+			inline = true,
+			get = function(item) return Incognito2.db.profile[item[#item]] end,
+			set = function(item, value) Incognito2.db.profile[item[#item]] = value end,
+			args = {
+				guild = {
+					order = 1,
+					type = "toggle",
+					width = "full",
+					name = L["guild"],
+					desc = L["guild_desc"],
+				},
+				party = {
+					order = 2,
+					type = "toggle",
+					width = "full",
+					name = L["party"],
+					desc = L["party_desc"],
+				},
+				raid = {
+					order = 3,
+					type = "toggle",
+					width = "full",
+					name = L["raid"],
+					desc = L["raid_desc"],
+				},
+				instance_chat = {
+					order = 4,
+					type = "toggle",
+					width = "full",
+					name = L["instance_chat"],
+					desc = L["instance_chat_desc"],
+				},
+				channel = {
+					order = 5,
+					type = "input",
+					name = L["channel"],
+					desc = L["channel_desc"],
+				},
+				channelInfo = {
+					order = 6,
+					type = "description",
+					name = "|cFFff8000" .. L["channel_info"] .. "|r"
+				},
+				empty = {
+					order = 7,
+					type = "description",
+					name = " "
+				}
+			}
 		},
 		debug = {
 			order = 3,
 			type = "toggle",
 			name = L["debug"],
 			desc = L["debug_desc"],
-		},
-		guild = {
-			order = 4,
-			type = "toggle",
-			name = L["guild"],
-			desc = L["guild_desc"],
-		},
-		party = {
-			order = 5,
-			type = "toggle",
-			name = L["party"],
-			desc = L["party_desc"],
-		},
-		raid = {
-			order = 6,
-			type = "toggle",
-			name = L["raid"],
-			desc = L["raid_desc"],
-		},
-		instance_chat = {
-			order = 7,
-			type = "toggle",
-			name = L["instance_chat"],
-			desc = L["instance_chat_desc"],
-		},
-		channel = {
-			order = 8,
-			type = "input",
-			name = L["channel"],
-			desc = L["channel_desc"],
-		},
-		hideMatchingCharNames = {
-			order = 9,
-			type = "input",
-			name = L["hideMatchingCharNames"],
-			desc = L["hideMatchingCharNames_desc"],
 		}
 	}
 }
@@ -84,7 +131,19 @@ local SlashOptions = {
 	type = "group",
 	handler = Incognito2,
 	get = function(item) return Incognito2.db.profile[item[#item]] end,
-	set = function(item, value) Incognito2.db.profile[item[#item]] = value end,
+	set = function(item, value)
+		if strlower(item[#item]) == strlower(L["exclude"]) then
+			if not Incognito2.db.profile.hideMatchingCharNames or Incognito2.db.profile.hideMatchingCharNames == "" then
+				Incognito2.db.profile.hideMatchingCharNames = value
+			elseif not containsElement(splitString(Incognito2.db.profile.hideMatchingCharNames, ","), value) then
+				Incognito2.db.profile.hideMatchingCharNames = Incognito2.db.profile.hideMatchingCharNames .. "," .. value
+			else
+				print("|cFF00ff00Incognito2|r: Name already excluded from appearing on character " .. value)
+			end
+		else
+			Incognito2.db.profile[item[#item]] = value
+		end
+	end,
 	args = {
 		enable = {
 			type = "toggle",
@@ -170,7 +229,7 @@ end
 
 function containsElement(table, value)
     for _, v in ipairs(table) do
-        if v == value then
+        if strlower(v) == strlower(value) then
             return true
         end
     end
@@ -181,10 +240,8 @@ end
 function Incognito2:SendChatMessage(msg, chatType, lang, channel)
 	if self.db.profile.enable and self.db.profile.name and self.db.profile.name ~= "" then
 		local hideNameOnChar = containsElement(splitString(self.db.profile.hideMatchingCharNames, ","), character_name)
-		self:Safe_Print("Hide name on this character from options: " .. tostring(hideNameOnChar))
-		self:Safe_Print("Incognito2 name matches character name: " .. tostring(self.db.profile.name == character_name))
-		if not hideNameOnChar and self.db.profile.name ~= character_name then
-			if  (self.db.profile.guild and (chatType == "GUILD" or chatType == "OFFICER"))
+		if not hideNameOnChar and strlower(self.db.profile.name) ~= strlower(character_name) then
+			if (self.db.profile.guild and (chatType == "GUILD" or chatType == "OFFICER"))
 			or (self.db.profile.raid and chatType == "RAID")
 			or (self.db.profile.party and chatType == "PARTY")
 			or (self.db.profile.instance_chat and chatType == "INSTANCE_CHAT")
