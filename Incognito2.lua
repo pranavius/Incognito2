@@ -1,12 +1,14 @@
+local addonName = "Incognito2"
+
 -- Module
-Incognito2 = LibStub("AceAddon-3.0"):NewAddon("Incognito2", "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0");
+Incognito2 = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0");
 
 -- Localization
-local L = LibStub("AceLocale-3.0"):GetLocale("Incognito2", true)
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName, true)
 
 local Options = {
 	type = "group",
-	name = "Incognito2",
+	name = addonName,
 	get = function(item) return Incognito2.db.profile[item[#item]] end,
 	set = function(item, value) Incognito2.db.profile[item[#item]] = value end,
 	args = {
@@ -127,6 +129,7 @@ local Defaults = {
 	},
 }
 
+local addon_category
 local SlashOptions = {
 	type = "group",
 	handler = Incognito2,
@@ -165,7 +168,12 @@ local SlashOptions = {
 			name = L["config"],
 			desc = L["config_desc"],
 			func = function()
-				InterfaceOptionsFrame_OpenToCategory(Incognito2.optionFrames.main)
+				if addon_category and addon_category.ID then
+					Settings.OpenToCategory(addon_category.ID)
+				else
+					self:Safe_Print("Options panel not found")
+					Settings.OpenToCategory()
+				end
 			end,
 		},
 	},
@@ -177,7 +185,6 @@ local SlashCmds = {
 };
 
 local character_name
-
 -- Initialization
 function Incognito2:OnInitialize()
 	-- Load database
@@ -187,7 +194,7 @@ function Incognito2:OnInitialize()
 	local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 
 	local config = LibStub("AceConfig-3.0")
-	config:RegisterOptionsTable("Incognito2", SlashOptions, SlashCmds)
+	config:RegisterOptionsTable(addonName, SlashOptions, SlashCmds)
 
 	local registry = LibStub("AceConfigRegistry-3.0")
 	registry:RegisterOptionsTable("Incognito2 Options", Options)
@@ -195,9 +202,12 @@ function Incognito2:OnInitialize()
 
 	local dialog = LibStub("AceConfigDialog-3.0");
 	self.optionFrames = {
-		main = dialog:AddToBlizOptions(	"Incognito2 Options", "Incognito2"),
-		profiles = dialog:AddToBlizOptions(	"Incognito2 Profiles", "Profiles", "Incognito2");
+		main = dialog:AddToBlizOptions(	"Incognito2 Options", addonName),
+		profiles = dialog:AddToBlizOptions(	"Incognito2 Profiles", "Profiles", addonName);
 	}
+
+	addon_category = Settings.RegisterCanvasLayoutCategory(Incognito2.optionFrames.main, addonName)
+	Settings.RegisterAddOnCategory(addon_category)
 
 	-- Hook SendChatMessage function
 	self:RawHook("SendChatMessage", true)
