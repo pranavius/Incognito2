@@ -1,2 +1,6 @@
+v1.0.1
+Fixed /inc config command so the options window opens correctly
+Metadata updates
+
 v1.0.0
 Initial release with updated features for hiding name in chat messages
