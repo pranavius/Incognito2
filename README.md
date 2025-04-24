@@ -50,7 +50,7 @@ There is also an option called **Debug** which enables debugging messages, thoug
   - This is the same as entering a name in the **Hide Name for Matching Characters** field in the Options window
 
 ## Development
-To report any bugs or request additional features, please open a new issue in the [GitHub repository](https://github.com/pranavchary/Incognito2/issues). Before doing so, please review the list of currently open issues to see if there is already one that matches yours.
+To report any bugs or request additional features, please open a new issue in the [GitHub repository](https://github.com/pranavius/Incognito2/issues). Before doing so, please review the list of currently open issues to see if there is already one that matches yours.
 
 If you would like to contribute to development, please clone the repository locally and open a pull request with your proposed changes.
 
