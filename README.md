@@ -49,6 +49,9 @@ There is also an option called **Debug** which enables debugging messages, thoug
   - *New to Incognito2*
   - This is the same as entering a name in the **Hide Name for Matching Characters** field in the Options window
 
+## Milestones
+**100 Total Downloads:** April 2, 2025
+
 ## Development
 To report any bugs or request additional features, please open a new issue in the [GitHub repository](https://github.com/pranavius/Incognito2/issues). Before doing so, please review the list of currently open issues to see if there is already one that matches yours.
 
