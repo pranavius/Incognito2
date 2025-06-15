@@ -1,8 +1,8 @@
-## Interface: 110105
+## Interface: 110107
 ## Title: Incognito2
 ## Notes: Builds on Incognito with some new features
 ## Author: pranavius, daniel@pew.cc, nyyr
-## Version: 1.0.1
+## Version: 1.0.3
 ## SavedVariables: Incognito2DB
 ## X-Flavor: retail
 ## X-Category: Chat & Communication
