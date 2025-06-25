@@ -2,7 +2,7 @@
 ## Title: Incognito2
 ## Notes: Builds on Incognito with some new features
 ## Author: pranavius, daniel@pew.cc, nyyr
-## Version: 1.0.3
+## Version: 1.0.4
 ## SavedVariables: Incognito2DB
 ## X-Flavor: retail
 ## X-Category: Chat & Communication

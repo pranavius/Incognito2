@@ -1,12 +1,16 @@
-v1.0.3
-Update TOC file for Patch 11.1.7
+**1.0.4**
+- Fixed a bug causing AddOn options to appear twice in the Options list
+- Updated ChatMessage hook to correctly propagate language argument
 
-v1.0.2
-Update TOC file for Patch 11.1.5
+**1.0.3**
+- Update TOC file for Patch 11.1.7
 
-v1.0.1
-Fixed /inc config command so the options window opens correctly
-Metadata updates
+**1.0.2**
+- Update TOC file for Patch 11.1.5
 
-v1.0.0
-Initial release with updated features for hiding name in chat messages
+**1.0.1**
+- Fixed `/inc config` command so the options window opens correctly
+- Metadata updates
+
+**1.0.0**
+- Initial release with updated features for hiding name in chat messages

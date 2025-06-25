@@ -192,22 +192,14 @@ function Incognito2:OnInitialize()
 
 	-- Setup config options
 	local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
-
 	local config = LibStub("AceConfig-3.0")
-	config:RegisterOptionsTable(addonName, SlashOptions, SlashCmds)
-
 	local registry = LibStub("AceConfigRegistry-3.0")
+
+	config:RegisterOptionsTable(addonName, SlashOptions, SlashCmds)
 	registry:RegisterOptionsTable("Incognito2 Options", Options)
 	registry:RegisterOptionsTable("Incognito2 Profiles", profiles);
-
-	local dialog = LibStub("AceConfigDialog-3.0");
-	self.optionFrames = {
-		main = dialog:AddToBlizOptions(	"Incognito2 Options", addonName),
-		profiles = dialog:AddToBlizOptions(	"Incognito2 Profiles", "Profiles", addonName);
-	}
-
-	addon_category = Settings.RegisterCanvasLayoutCategory(Incognito2.optionFrames.main, addonName)
-	Settings.RegisterAddOnCategory(addon_category)
+	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Incognito2 Options", addonName)
+	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Incognito2 Profiles", "Profiles", addonName)
 
 	-- Hook SendChatMessage function
 	self:RawHook("SendChatMessage", true)
@@ -267,5 +259,5 @@ function Incognito2:SendChatMessage(msg, chatType, lang, channel)
 	end
 
 	-- Call original function
-	self.hooks.SendChatMessage(msg, chatType, language, channel)
+	self.hooks.SendChatMessage(msg, chatType, lang, channel)
 end
