@@ -9,6 +9,7 @@
 ## X-Localizations: enUS
 ## X-AddOn-Provider: github
 ## X-Curse-Project-ID: 1222342
+## X-Wago-ID: 56n9MAN9
 ## X-License: GNU General Public License
 
 embeds.xml
