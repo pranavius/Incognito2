@@ -1,10 +1,40 @@
-local addonName = "Incognito2"
+local addonName, Incognito2 = ...
 
 -- Module
 Incognito2 = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0");
 
 -- Localization
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName, true)
+
+-- Utilities
+function Incognito2:DebugPrint(...)
+	if self.db.profile.debug then print(WrapTextInColor("[Incognito2]", PURE_GREEN_COLOR), ...) end
+end
+
+function Incognito2:DebugDump(value, startKey)
+	if self.db.profile.debug then DevTools_Dump(value, startKey) end
+end
+
+function SplitString(input, separator)
+    local result = {}
+	if input == nil then
+		return result
+	end
+
+    for value in string.gmatch(input, "([^" .. separator .. "]+)") do
+        table.insert(result, value:match("^%s*(.-)%s*$")) -- Trim spaces
+    end
+    return result
+end
+
+function ContainsElement(table, value)
+    for _, v in ipairs(table) do
+        if strlower(v) == strlower(value) then
+            return true
+        end
+    end
+    return false
+end
 
 local Options = {
 	type = "group",
@@ -129,7 +159,6 @@ local Defaults = {
 	},
 }
 
-local addon_category
 local SlashOptions = {
 	type = "group",
 	handler = Incognito2,
@@ -138,7 +167,7 @@ local SlashOptions = {
 		if strlower(item[#item]) == strlower(L["exclude"]) then
 			if not Incognito2.db.profile.hideMatchingCharNames or Incognito2.db.profile.hideMatchingCharNames == "" then
 				Incognito2.db.profile.hideMatchingCharNames = value
-			elseif not containsElement(splitString(Incognito2.db.profile.hideMatchingCharNames, ","), value) then
+			elseif not ContainsElement(SplitString(Incognito2.db.profile.hideMatchingCharNames, ","), value) then
 				Incognito2.db.profile.hideMatchingCharNames = Incognito2.db.profile.hideMatchingCharNames .. "," .. value
 			else
 				print("|cFF00ff00Incognito2|r: Name already excluded from appearing on character " .. value)
@@ -167,14 +196,7 @@ local SlashOptions = {
 			type = "execute",
 			name = L["config"],
 			desc = L["config_desc"],
-			func = function()
-				if addon_category and addon_category.ID then
-					Settings.OpenToCategory(addon_category.ID)
-				else
-					self:Safe_Print("Options panel not found")
-					Settings.OpenToCategory()
-				end
-			end,
+			func = function() Settings.OpenToCategory(addonName) end,
 		},
 	},
 }
@@ -202,56 +224,33 @@ function Incognito2:OnInitialize()
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Incognito2 Profiles", "Profiles", addonName)
 
 	-- Hook SendChatMessage function
-	self:RawHook("SendChatMessage", true)
+	self:RawHook(C_ChatInfo, "SendChatMessage", "SendChatMessage", true)
 
 	-- get current character name
 	character_name, _ = UnitName("player")
+	self:DebugPrint("Character name:", character_name)
 	
-	self:Safe_Print(L["Loaded"])
-end
-
--- Functions
-function Incognito2:Safe_Print(msg)
-	if self.db.profile.debug then
-		self:Print(msg)
-	end
-end
-
-function splitString(input, separator)
-    local result = {}
-	if input == nil then
-		return result
-	end
-
-    for value in string.gmatch(input, "([^" .. separator .. "]+)") do
-        table.insert(result, value:match("^%s*(.-)%s*$")) -- Trim spaces
-    end
-    return result
-end
-
-function containsElement(table, value)
-    for _, v in ipairs(table) do
-        if strlower(v) == strlower(value) then
-            return true
-        end
-    end
-    return false
+	self:DebugPrint(L["Loaded"])
+	self:DebugDump(self.db.profile)
 end
 
 -- Event Handlers
 function Incognito2:SendChatMessage(msg, chatType, lang, channel)
 	if self.db.profile.enable and self.db.profile.name and self.db.profile.name ~= "" then
-		local hideNameOnChar = containsElement(splitString(self.db.profile.hideMatchingCharNames, ","), character_name)
+		local hideNameOnChar = ContainsElement(SplitString(self.db.profile.hideMatchingCharNames, ","), character_name)
+		self:DebugPrint("Hide name on character: ", hideNameOnChar)
 		if not hideNameOnChar and strlower(self.db.profile.name) ~= strlower(character_name) then
 			if (self.db.profile.guild and (chatType == "GUILD" or chatType == "OFFICER"))
 			or (self.db.profile.raid and chatType == "RAID")
 			or (self.db.profile.party and chatType == "PARTY")
 			or (self.db.profile.instance_chat and chatType == "INSTANCE_CHAT")
 			then
+				self:DebugPrint("Append name to message in chat type:", chatType)
 				msg = "(" .. self.db.profile.name .. "): " .. msg
 			elseif self.db.profile.channel and chatType == "CHANNEL" then
 				local id, chname = GetChannelName(channel)
 				if strupper(self.db.profile.channel) == strupper(chname) then
+					self:DebugPrint("Append name to message in a channel")
 					msg = "(" .. self.db.profile.name .. "): " .. msg
 				end
 			end
@@ -259,5 +258,6 @@ function Incognito2:SendChatMessage(msg, chatType, lang, channel)
 	end
 
 	-- Call original function
-	self.hooks.SendChatMessage(msg, chatType, lang, channel)
+	-- self:DebugDump(self.hooks)
+	self.hooks[C_ChatInfo].SendChatMessage(msg, chatType, lang, channel)
 end

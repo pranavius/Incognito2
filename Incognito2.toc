@@ -1,8 +1,8 @@
-## Interface: 110200, 110107
+## Interface: 110200
 ## Title: Incognito2
 ## Notes: Builds on Incognito with some new features
 ## Author: pranavius, daniel@pew.cc, nyyr
-## Version: 1.0.5
+## Version: 1.1.0
 ## SavedVariables: Incognito2DB
 ## X-Flavor: retail
 ## X-Category: Chat & Communication
@@ -14,5 +14,5 @@
 
 embeds.xml
 
-Incognito2_enUS.lua
+enUS.lua
 Incognito2.lua
