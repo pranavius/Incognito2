@@ -1,7 +1,7 @@
 ## Interface: 120001
 ## Title: Incognito2
 ## Notes: Builds on Incognito with some new features
-## Author: pranavius, daniel@pew.cc, nyyr
+## Author: @project-author@, daniel@pew.cc, nyyr
 ## Version: 1.2.0
 ## SavedVariables: Incognito2DB
 ## X-Flavor: retail
@@ -11,6 +11,7 @@
 ## X-Curse-Project-ID: 1222342
 ## X-Wago-ID: 56n9MAN9
 ## X-License: GNU General Public License
+## X-Last-Update: @project-date-iso@
 
 embeds.xml
 

@@ -194,7 +194,7 @@ local SlashOptions = {
 			type = "execute",
 			name = L["config"],
 			desc = L["config_desc"],
-			func = function() Settings.OpenToCategory(addonName) end,
+			func = function() Settings.OpenToCategory(Incognito2.categoryID) end,
 		},
 	},
 }
@@ -215,7 +215,7 @@ function Incognito2:OnInitialize()
 	config:RegisterOptionsTable(addonName, SlashOptions, SlashCmds)
 	registry:RegisterOptionsTable("Incognito2 Options", Options)
 	registry:RegisterOptionsTable("Incognito2 Profiles", profiles)
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Incognito2 Options", addonName)
+	_, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Incognito2 Options", addonName)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Incognito2 Profiles", "Profiles", addonName)
 
 	-- Hook SendChatMessage function
