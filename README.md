@@ -8,7 +8,7 @@ Updated version of the popular World of Warcraft AddOn *Incognito*. I do not tak
 - nyyr
 
 ## Summary
-Incognito adds you name in front of your chat messages. Can be enabled for guild (and officer), party, raid, and chat channel messages.
+**Incognito2** adds you name in front of your chat messages. Can be enabled for guild (and officer), party, raid, and chat channel messages.
 
 **Example**
 <span  style="color:#1eff00">[Guild][Pranavius]: Hello, world!</span>
@@ -22,10 +22,9 @@ You can use the options window to modify all available options. Alternatively, y
 #### General Options
 - **Enable**: Enables AddOn functionality
 - **Name**: The name you want to appear in your chat messages
-- **Hide Name for Matching Characters**: When the current character's name is any of the ones listed, Incognito2 will not add your name to chat messages
-  - *This is a new feature available in Incognito2*
+- **Hide Name for Matching Characters**: When the current character's name is any of the ones listed, **Incognito2** will not add your name to chat messages
   - Character names should be entered separated by commas
-  - By default, Incognito2 will not add your name to messages if it matches the current character's name
+  - By default, **Incognito2** will not add your name to messages if it matches the current character's name
 
 #### Chat Options
 - **Guild**: Adds your name to guild and officer chat messages (`/g` and `/o`)
@@ -46,7 +45,6 @@ There is also an option called **Debug** which enables debugging messages, thoug
 - `/inc name`: Sets the name to add to chat messages
   - This is the same as entering text in the **Name** field in the Options window
 - `/inc exclude`: Adds a character name to not add your name to in chat messages
-  - *New to Incognito2*
   - This is the same as entering a name in the **Hide Name for Matching Characters** field in the Options window
 
 ## Development
