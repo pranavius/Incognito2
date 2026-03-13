@@ -14,7 +14,7 @@ end
 
 ---Dumps the desired value to the console if the AddOn is in debugging mode. This is just a wrapper around the Blizzard `DevTools_Dump` function.
 ---@param value any
----@param startKey string
+---@param startKey? string
 ---@see DevTools_Dump
 local function DebugDump(value, startKey)
 	if Incognito2.db.profile.debug then DevTools_Dump(value, startKey) end
@@ -41,19 +41,24 @@ end
 ---@param delimiter string The delimiting character used in the string (usually a comma)
 ---@param targetKey? string Optional key for the new table value to create
 local function MigrateStringToTable(db, key, delimiter, targetKey)
+	DebugPrint("Migrating string value to table for key", key)
 	local migratedProfiles = 0
-	for _, profile in (db.profiles) do
+	for _, profile in pairs(db.profiles) do
 		if not profile._inc2Migrated then
 			if type(profile[key]) ~= "string" then return end
-			local migrated = {}
-			if profile[key] ~= "" then
-				for value in string.gmatch(profile[key], "([^" .. delimiter .. "]+)") do
-					migrated[value:match("^%s*(.-)%s*$")] = true
+			if profile[key] == nil then
+				profile[targetKey or key] = {}
+			else
+				local migrated = {}
+				if profile[key] ~= "" then
+					for value in string.gmatch(profile[key], "([^" .. delimiter .. "]+)") do
+						migrated[value:match("^%s*(.-)%s*$")] = true
+					end
 				end
-			end
-			profile[targetKey or key] = migrated
-			if targetKey and targetKey ~= key then
-				profile[key] = nil
+				profile[targetKey or key] = migrated
+				if targetKey and targetKey ~= key then
+					profile[key] = nil
+				end
 			end
 			DebugPrint("Migrated profile database from v1 to v2")
 			profile._inc2Migrated = true
@@ -71,8 +76,16 @@ end
 ---@return table args
 local function BuildListArgs(dbKey)
 	local args = {}
+	local argsCounter = CreateCounter()
+	if dbKey == "channels" then
+		args["channels_desc"] = {
+			order = argsCounter(),
+			type = "description",
+			name = DARKYELLOW_FONT_COLOR:WrapTextInColorCode(L["channels_desc"])
+		}
+	end
 	args["_add"] = {
-		order = 1,
+		order = argsCounter(),
 		type = "input",
 		name = L["list_add"],
 		width = "full",
@@ -89,15 +102,14 @@ local function BuildListArgs(dbKey)
 		end,
 		get = function() return "" end,
 	}
-	local i = 2
 	local entries = Incognito2.db.profile[dbKey]
 	if entries then
 		for name, _ in pairs(entries) do
 			local entryName = name
 			args["entry_" .. entryName] = {
-				order = i,
+				order = argsCounter(),
 				type = "execute",
-				name = WHITE_FONT_COLOR:WrapTextInColorCode(entryName).."  [X]",
+				name = entryName,
 				desc = L["list_remove_desc"],
 				width = 0.75,
 				func = function()
@@ -108,7 +120,6 @@ local function BuildListArgs(dbKey)
 					LibStub("AceConfigRegistry-3.0"):NotifyChange("Incognito2 Options")
 				end,
 			}
-			i = i + 1
 		end
 	end
 	return args
@@ -117,6 +128,7 @@ end
 ---Builds the AceConfig options table dynamically.
 ---A function is required due to the dynamic nature of the hideMatchingCharNames and channels lists
 local function GetOptionsTable()
+	local argsCounter = CreateCounter()
 	return {
 		type = "group",
 		name = addonName,
@@ -124,7 +136,7 @@ local function GetOptionsTable()
 		set = function(item, value) Incognito2.db.profile[item[#item]] = value end,
 		args = {
 			options = {
-				order = 1,
+				order = argsCounter(),
 				type = "group",
 				name = L["general_options"],
 				inline = true,
@@ -147,16 +159,16 @@ local function GetOptionsTable()
 				}
 			},
 			hideMatchingCharNamesGroup = {
-				order = 2,
+				order = argsCounter(),
 				type = "group",
-				name = L["hideMatchingCharNames"],
+				name = L["hide_name_for_matching_chars"],
 				inline = true,
 				args = BuildListArgs("hideMatchingCharNames"),
 			},
 			chatOptions = {
-				order = 3,
+				order = argsCounter(),
 				type = "group",
-				name = L["chat_options"],
+				name = L["group_chat_options"],
 				inline = true,
 				get = function(item) return Incognito2.db.profile[item[#item]] end,
 				set = function(item, value) Incognito2.db.profile[item[#item]] = value end,
@@ -192,20 +204,19 @@ local function GetOptionsTable()
 				}
 			},
 			channelsGroup = {
-				order = 4,
+				order = argsCounter(),
 				type = "group",
-				name = L["channels"],
-				description = L["channels_desc"],
+				name = L["channel_options"],
 				inline = true,
 				args = BuildListArgs("channels"),
 			},
 			channelInfo = {
-				order = 5,
+				order = argsCounter(),
 				type = "description",
-				name = LEGENDARY_ORANGE_COLOR:WrapTextInColorCode(L["channels_info"])
+				name = DIM_RED_FONT_COLOR:WrapTextInColorCode(L["channels_info"])
 			},
 			debug = {
-				order = 6,
+				order = argsCounter(),
 				type = "toggle",
 				name = L["debug"],
 				desc = L["debug_desc"],
@@ -225,6 +236,7 @@ local Defaults = {
 		debug = false,
 		channels = {},
 		hideMatchingCharNames = {},
+		_inc2Migrated = false
 	},
 }
 
@@ -300,7 +312,6 @@ function Incognito2:OnInitialize()
 	DebugPrint("Character name:", character_name)
 
 	DebugPrint(L["Loaded"])
-	DebugDump(self.db.profile)
 end
 
 ---The function that captures a chat message being sent in order to prepend the specified nickname to the message
