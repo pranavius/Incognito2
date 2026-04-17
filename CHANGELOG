@@ -1,3 +1,6 @@
+**2.1.0**
+- Fixed a bug where chatting in Mythic+, combat, or other "locked down" situations would throw an error, resulting in no longer being able to chat
+
 **2.0.0**
 - Updated for compatibility with *Midnight* expansion (Patch 12.0.1)
 - Fixed a bug that prevented nicknames from being added to regular chat messages
