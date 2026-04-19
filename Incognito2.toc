@@ -2,10 +2,10 @@
 ## Title: Incognito2
 ## Notes: Builds on Incognito with some new features
 ## Author: @project-author@, daniel@pew.cc, nyyr
-## Version: 2.1.0
+## Version: @project-version@
 ## SavedVariables: Incognito2DB
+## Category: Chat & Communication
 ## X-Flavor: retail
-## X-Category: Chat & Communication
 ## X-Localizations: enUS
 ## X-AddOn-Provider: github
 ## X-Curse-Project-ID: 1222342
