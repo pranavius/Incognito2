@@ -1,4 +1,4 @@
-name: PranTools - Package + Release
+name: Package and release
 
 on:
   push:
