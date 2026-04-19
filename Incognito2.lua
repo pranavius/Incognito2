@@ -305,39 +305,63 @@ function Incognito2:OnInitialize()
 	_, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Incognito2 Options", addonName)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Incognito2 Profiles", "Profiles", addonName)
 
-	-- Hook SendChatMessage function
-	self:RawHook(C_ChatInfo, "SendChatMessage", "SendChatMessage", true)
-
 	character_name, _ = UnitName("player")
 	DebugPrint("Character name:", character_name)
+
+	-- Hook each chat frame edit box to pre-modify text before it is sent.
+	-- Avoids tainting C_ChatInfo.SendChatMessage (triggering ADDON_ACTION_FORBIDDEN during combat and M+)
+	for i = 1, NUM_CHAT_WINDOWS do
+		local editBox = _G["ChatFrame" .. i .. "EditBox"]
+		if editBox then
+			editBox:HookScript("OnKeyDown", function(box, key)
+				if key == "ENTER" or key == "NUMPADENTER" then
+					Incognito2:PreprocessChatMessage(box)
+				end
+			end)
+		end
+	end
 
 	DebugPrint(L["Loaded"])
 end
 
----The function that captures a chat message being sent in order to prepend the specified nickname to the message
----@param msg string The chat message to be sent
----@param chatType "GUILD"|"OFFICER"|"RAID"|"PARTY"|"INSTANCE_CHAT"|"CHANNEL"
----@param lang number The ID number corresponding to the language of the game client
----@param channel string|number The name or ID number of the channel in which the message is sent
-function Incognito2:SendChatMessage(msg, chatType, lang, channel)
-	if self.db.profile.enable and self.db.profile.name and self.db.profile.name ~= "" then
-		local hideNameOnChar = ContainsValue(self.db.profile.hideMatchingCharNames, character_name)
-		DebugPrint("Hide name on character: ", hideNameOnChar)
-		if not hideNameOnChar and strlower(self.db.profile.name) ~= strlower(character_name) then
-			if (self.db.profile.guild and (chatType == "GUILD" or chatType == "OFFICER"))
-			or (self.db.profile.raid and chatType == "RAID")
-			or (self.db.profile.party and chatType == "PARTY")
-			or (self.db.profile.instance_chat and chatType == "INSTANCE_CHAT")
-			then
-				DebugPrint("Append name to message in chat type:", chatType)
-				msg = "(" .. self.db.profile.name .. "): " .. msg
-			elseif self.db.profile.channels and next(self.db.profile.channels) and chatType == "CHANNEL" then
-				local id, chname = GetChannelName(channel)
-				DebugPrint(id, chname)
+---Pre-modifies the text in a chat edit box to prepend the configured nickname before the message is sent.
+---@param editBox table The chat frame edit box that is about to send a message
+function Incognito2:PreprocessChatMessage(editBox)
+	if not (self.db.profile.enable and self.db.profile.name and self.db.profile.name ~= "") then return end
+
+	local hideNameOnChar = ContainsValue(self.db.profile.hideMatchingCharNames, character_name)
+	DebugPrint("Hide name on character: ", hideNameOnChar)
+	if hideNameOnChar or strlower(self.db.profile.name) == strlower(character_name) then return end
+
+	local text = editBox:GetText()
+	if not text or text == "" then return end
+	-- IMPORTANT: Do not modify slash commands
+	if text:sub(1, 1) == "/" then return end
+
+	local chatType = editBox:GetAttribute("chatType")
+	if not chatType then return end
+	chatType = strupper(chatType)
+
+	local newText = text
+
+	if (self.db.profile.guild and (chatType == "GUILD" or chatType == "OFFICER"))
+	or (self.db.profile.raid and chatType == "RAID")
+	or (self.db.profile.party and chatType == "PARTY")
+	or (self.db.profile.instance_chat and chatType == "INSTANCE_CHAT")
+	then
+		DebugPrint("Append name to message in chat type:", chatType)
+		newText = "(" .. self.db.profile.name .. "): " .. text
+	elseif self.db.profile.channels and next(self.db.profile.channels) and chatType == "CHANNEL" then
+		local channelTarget = editBox:GetAttribute("channelTarget")
+		DebugPrint("Channel target:", channelTarget)
+		if channelTarget then
+			local info = C_ChatInfo.GetChannelInfoFromIdentifier(tostring(channelTarget))
+			DebugPrint("Channel info:", info and info.name, info and info.localID)
+			if info then
 				for channelMatch, _ in pairs(self.db.profile.channels) do
-					if strlower(chname):match(strlower(channelMatch)) or tostring(id) == channelMatch then
+					if strlower(info.name):match(strlower(channelMatch)) or tostring(info.localID) == channelMatch then
 						DebugPrint("Append name to message in a channel")
-						msg = "(" .. self.db.profile.name .. "): " .. msg
+						newText = "(" .. self.db.profile.name .. "): " .. text
 						break
 					end
 				end
@@ -345,6 +369,8 @@ function Incognito2:SendChatMessage(msg, chatType, lang, channel)
 		end
 	end
 
-	-- Call original function
-	self.hooks[C_ChatInfo].SendChatMessage(msg, chatType, lang, channel)
+	if newText ~= text then
+		editBox:SetText(newText)
+		editBox:SetCursorPosition(#newText)
+	end
 end
