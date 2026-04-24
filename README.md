@@ -51,7 +51,7 @@ There is also an option called **Debug** which enables debugging messages, thoug
   - This is the same as entering a name in the **Hide Name for Matching Characters** field in the Options window
 
 ## Connect
-Feedback on this AddOn or any others that I develop/maintain is always welcome. Bug reports or request additional features If you enjoy using any of my AddOns and would like to support future development, it is greatly appreciated.
+Feedback on this AddOn or any others that I develop/maintain is always welcome. If you enjoy using any of my AddOns and would like to support future development, it is greatly appreciated.
 
 [![GitHub](https://img.shields.io/badge/github-000000?style=for-the-badge&logo=github)](https://github.com/pranavius)
 [![X](https://img.shields.io/badge/@PranaviusWoW-000000?style=for-the-badge&logo=x)](https://x.com/PranaviusWoW)
