@@ -1,3 +1,9 @@
+**2.1.2**
+- Increased scope of AddOn restriction checks before prepending nicknames to chat messages
+
+**2.1.1**
+- Fixed a dependency ordering error that stopped the AddOn from working if another AddOn didn't provide the dependency
+
 **2.1.0**
 - Fixed a bug where chatting in Mythic+, combat, or other "locked down" situations would throw an error, resulting in no longer being able to chat
 - Attempt to resolve an issue where AddOn dependency is not included in the release

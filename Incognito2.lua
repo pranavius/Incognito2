@@ -328,6 +328,17 @@ end
 ---@param editBox table The chat frame edit box that is about to send a message
 function Incognito2:PreprocessChatMessage(editBox)
 	if not (self.db.profile.enable and self.db.profile.name and self.db.profile.name ~= "") then return end
+	-- Prevents ADDON_ACTION_BLOCKED and (hopefully) ADDON_ACTION_FORBIDDEN errors by
+	-- bypassing message modification when in most restricted states
+	local RType = Enum.AddOnRestrictionType
+	if C_RestrictedActions.IsAddOnRestrictionActive(RType.Chat)
+	or C_RestrictedActions.IsAddOnRestrictionActive(RType.Encounter)
+	or C_RestrictedActions.IsAddOnRestrictionActive(RType.ChallengeMode)
+	or C_RestrictedActions.IsAddOnRestrictionActive(RType.PvPMatch)
+	or InCombatLockdown() then
+		DebugPrint("Skipping name prepend: restricted state active")
+		return
+	end
 
 	local hideNameOnChar = ContainsValue(self.db.profile.hideMatchingCharNames, character_name)
 	DebugPrint("Hide name on character: ", hideNameOnChar)
