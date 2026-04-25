@@ -1,5 +1,6 @@
 **2.1.2**
 - Increased scope of AddOn restriction checks before prepending nicknames to chat messages
+- Update AddOn for Patch 12.0.5 compatibility
 
 **2.1.1**
 - Fixed a dependency ordering error that stopped the AddOn from working if another AddOn didn't provide the dependency
