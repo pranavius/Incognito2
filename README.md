@@ -7,6 +7,9 @@ Updated version of the popular World of Warcraft AddOn *Incognito*. I do not tak
 -  <!-- -->daniel@pew.cc
 - nyyr
 
+[![Discord](https://img.shields.io/badge/join-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/rqXW2cenWg)
+[![Patreon](https://img.shields.io/badge/support-F96854?style=for-the-badge&logo=patreon)](https://patreon.com/cw/Pranavius)
+
 ## Summary
 **Incognito2** adds you name in front of your chat messages. Can be enabled for guild (and officer), party, raid, and chat channel messages.
 
@@ -47,18 +50,9 @@ There is also an option called **Debug** which enables debugging messages, thoug
 - `/inc exclude`: Adds a character name to not add your name to in chat messages
   - This is the same as entering a name in the **Hide Name for Matching Characters** field in the Options window
 
-## Development
-To report any bugs or request additional features, please open a new issue in the [GitHub repository](https://github.com/pranavius/Incognito2/issues). Before doing so, please review the list of currently open issues to see if there is already one that matches yours.
+## Connect
+Feedback on this AddOn or any others that I develop/maintain is always welcome. If you enjoy using any of my AddOns and would like to support future development, it is greatly appreciated.
 
-If you would like to contribute to development, please clone the repository locally and open a pull request with your proposed changes.
-
-This is my first foray into creating and updating WoW AddOns, so any feedback is greatly appreciated.
-
-## Contact
-**Twitter/X**: [PranaviusWoW](https://x.com/pranaviuswow)
-
-**GitHub**: [Pranavius](https://github.com/pranavius)
-
-**Email**: [pranavius1@gmail.com](mailto:pranavius1@gmail.com)
-
-**Discord**: [Pranlabs](https://discord.gg/Vj3D5GeQZh)
+[![GitHub](https://img.shields.io/badge/github-000000?style=for-the-badge&logo=github)](https://github.com/pranavius)
+[![X](https://img.shields.io/badge/@PranaviusWoW-000000?style=for-the-badge&logo=x)](https://x.com/PranaviusWoW)
+[![Email](https://img.shields.io/badge/email-ffffff?style=for-the-badge&logo=gmail)](mailto:pranavius1@gmail.com)
