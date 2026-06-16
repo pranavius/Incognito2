@@ -310,7 +310,7 @@ function Incognito2:OnInitialize()
 
 	-- Hook each chat frame edit box to pre-modify text before it is sent.
 	-- Avoids tainting C_ChatInfo.SendChatMessage (triggering ADDON_ACTION_FORBIDDEN during combat and M+)
-	for i = 1, NUM_CHAT_WINDOWS do
+	for i = 1, Constants.ChatFrameConstants.MaxChatWindows do
 		local editBox = _G["ChatFrame" .. i .. "EditBox"]
 		if editBox then
 			editBox:HookScript("OnKeyDown", function(box, key)
