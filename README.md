@@ -1,4 +1,3 @@
-
 # Incognito2
 
 Updated version of the popular World of Warcraft AddOn *Incognito*. I do not take any credit for creating this AddOn, but am simply extending its functionality and updating to be up-to-date with WoW's latest patch. The original AddOn's functionality remains intact for the most part; I have only made some modifications which I feel will improve its usability.
