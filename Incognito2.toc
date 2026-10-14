@@ -1,4 +1,4 @@
-## Interface: 120100, 120007
+## Interface: 120105
 ## Title: Incognito2
 ## Notes: Builds on Incognito with some new features
 ## Author: @project-author@, daniel@pew.cc, nyyr
