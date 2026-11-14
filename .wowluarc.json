@@ -1,4 +1,4 @@
 {
     "ignore": [".release/", "Libs/"],
-    "flavors": ["retail"]
+    "flavors": ["retail", "forever"]
 }

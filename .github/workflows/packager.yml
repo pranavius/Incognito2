@@ -19,10 +19,13 @@ jobs:
         with:
           fetch-depth: 0
       - name: Extract current version changelog
+        env:
+          TAG: ${{ github.ref_name }}
         run: |
-          awk '/^\*\*'"${{ github.ref_name }}"'\*\*/{found=1} found{if(/^\*\*/ && !/^\*\*'"${{ github.ref_name }}"'\*\*/) exit; print}' CHANGELOG > CHANGELOG.tmp
+          awk -v heading="**$TAG**" '$0 == heading {found=1; print; next} found && /^\*\*/ {exit} found' CHANGELOG > CHANGELOG.tmp
+          test -s CHANGELOG.tmp || { echo "No CHANGELOG entry found for $TAG"; exit 1; }
           mv CHANGELOG.tmp CHANGELOG
       - name: Package and release
         uses: BigWigsMods/packager@v2
         with:
-          args: -g retail -w 0 -n {package-name}-v{project-version}
+          args: -w 0 -n {package-name}-v{project-version}

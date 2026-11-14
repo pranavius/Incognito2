@@ -20,6 +20,8 @@ L["name_desc"] = "The name to display in your chat messages when enabled"
 
 L["hide_name_for_matching_chars"] = "Incognito2 will not add your name to any of the characters added below"
 
+L["forever_names_desc"] = "A one-word entry matches either the first or second name (ex. "..WHITE_FONT_COLOR:WrapTextInColorCode("\"Pranavius\"").." excludes both "..WHITE_FONT_COLOR:WrapTextInColorCode("Pranavius Lastname").." and "..WHITE_FONT_COLOR:WrapTextInColorCode("Firstname Pranavius").."). Enter both names (ex. "..WHITE_FONT_COLOR:WrapTextInColorCode("\"Pranavius Lastname\"")..") to exclude only that character."
+
 L["debug"] = "Debug"
 L["debug_desc"] = "Enable debugging messages output. You probably don't want to enable this."
 

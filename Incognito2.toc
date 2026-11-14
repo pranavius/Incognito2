@@ -1,11 +1,11 @@
-## Interface: 120105
+## Interface: 120105, 16001
 ## Title: Incognito2
 ## Notes: Builds on Incognito with some new features
 ## Author: @project-author@, daniel@pew.cc, nyyr
 ## Version: @project-version@
 ## SavedVariables: Incognito2DB
 ## Category: Chat & Communication
-## X-Flavor: retail
+## X-Flavor: retail, forever
 ## X-Localizations: enUS
 ## X-AddOn-Provider: github
 ## X-Curse-Project-ID: 1222342

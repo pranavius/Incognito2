@@ -18,3 +18,5 @@ manual-changelog:
 ignore:
   - README.md
   - CHANGELOG
+  - LICENSE
+  - Annotations.lua

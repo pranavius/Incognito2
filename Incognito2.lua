@@ -3,6 +3,10 @@ local addonName, Incognito2 = ...
 Incognito2 = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName, true)
 
+local isForever = tostring(select(4, GetBuildInfo())):match("^16") ~= nil
+
+local character_name, character_second_name
+
 -- Utility Functions
 
 ---Prints the desired text if the AddOn is in debugging mode. This is just a wrapper around the standard `print` function.
@@ -30,6 +34,30 @@ local function ContainsValue(tbl, value)
 		if strlower(entry) == strlower(value) then
 			return true
 		end
+	end
+	return false
+end
+
+---Indicates whether a name matches the current character.
+---On retail only the character name is compared. On WoW: Forever the entry may be the first name,
+---the second name, or both ("First Second"); matching is case-insensitive.
+---@param entry string
+---@return boolean
+local function matchesCharacterName(entry)
+	entry = strlower(entry)
+	local firstName = strlower(character_name)
+	if entry == firstName then return true end
+	if not character_second_name then return false end
+	local secondName = strlower(character_second_name)
+	return entry == secondName or entry == firstName .. " " .. secondName
+end
+
+---Indicates whether the current character matches any entry in the exclusion list
+---@param excludedNames table? Set of excluded names
+---@return boolean
+local function isCharacterExcluded(excludedNames)
+	for entry in pairs(excludedNames or {}) do
+		if matchesCharacterName(entry) then return true end
 	end
 	return false
 end
@@ -82,6 +110,13 @@ local function BuildListArgs(dbKey)
 			order = argsCounter(),
 			type = "description",
 			name = DARKYELLOW_FONT_COLOR:WrapTextInColorCode(L["channels_desc"])
+		}
+	end
+	if dbKey == "hideMatchingCharNames" and isForever then
+		args["forever_names_desc"] = {
+			order = argsCounter(),
+			type = "description",
+			name = DARKYELLOW_FONT_COLOR:WrapTextInColorCode(L["forever_names_desc"])
 		}
 	end
 	args["_add"] = {
@@ -285,7 +320,6 @@ local SlashOptions = {
 
 local SlashCmds = { "inc", "incognito" }
 
-local character_name
 function Incognito2:OnInitialize()
 	-- Load database
 	self.db = LibStub("AceDB-3.0"):New("Incognito2DB", Defaults, "Default")
@@ -305,8 +339,9 @@ function Incognito2:OnInitialize()
 	_, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Incognito2 Options", addonName)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Incognito2 Profiles", "Profiles", addonName)
 
-	character_name, _ = UnitName("player")
-	DebugPrint("Character name:", character_name)
+	character_name, character_second_name = UnitName("player")
+	if not isForever or character_second_name == "" then character_second_name = nil end
+	DebugPrint("Character name:", character_name, "second name:", character_second_name)
 
 	-- Hook each chat frame edit box to pre-modify text before it is sent.
 	-- Avoids tainting C_ChatInfo.SendChatMessage (triggering ADDON_ACTION_FORBIDDEN during combat and M+)
@@ -340,9 +375,9 @@ function Incognito2:PreprocessChatMessage(editBox)
 		return
 	end
 
-	local hideNameOnChar = ContainsValue(self.db.profile.hideMatchingCharNames, character_name)
+	local hideNameOnChar = isCharacterExcluded(self.db.profile.hideMatchingCharNames)
 	DebugPrint("Hide name on character: ", hideNameOnChar)
-	if hideNameOnChar or strlower(self.db.profile.name) == strlower(character_name) then return end
+	if hideNameOnChar or matchesCharacterName(self.db.profile.name) then return end
 
 	local text = editBox:GetText()
 	if not text or text == "" then return end
