@@ -1,6 +1,11 @@
+**2.4.0**
+- Updated AddOn category from 'Chat & Communication' to the standard 'Chat' (localized across multiple languages)
+- Added compatibility for WoW: Forever
+- **WoW: Forever**
+  - Added support for first, last, and full character names (excluded characters list can match either the first name, the second name, or both)
+
 **2.3.0**
 - Updated AddOn for Patch 12.1.5 compatibility
-
 
 **2.2.1**
 - Updated AddOn for Patch 12.1.0 compatibility

@@ -4,7 +4,17 @@
 ## Author: @project-author@, daniel@pew.cc, nyyr
 ## Version: @project-version@
 ## SavedVariables: Incognito2DB
-## Category: Chat & Communication
+## Category: Chat
+## Category-deDE: Chat
+## Category-esES: Chat
+## Category-esMX: Chat
+## Category-frFR: Discussion
+## Category-itIT: Chat
+## Category-koKR: 대화
+## Category-ptBR: Bate-papo
+## Category-ruRU: Чат
+## Category-zhCN: 聊天
+## Category-zhTW: 對話
 ## X-Flavor: retail, forever
 ## X-Localizations: enUS
 ## X-AddOn-Provider: github

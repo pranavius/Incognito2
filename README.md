@@ -1,6 +1,8 @@
 # Incognito2
 
-Updated version of the popular World of Warcraft AddOn *Incognito*. I do not take any credit for creating this AddOn, but am simply extending its functionality and updating to be up-to-date with WoW's latest patch. The original AddOn's functionality remains intact for the most part; I have only made some modifications which I feel will improve its usability.
+Updated version of the popular World of Warcraft AddOn *Incognito*. I do not take any credit for creating this AddOn, but am simply extending its functionality and maintaining it to be up-to-date with WoW's latest patches. The original AddOn's core functionality remains intact for the most part; I have only made some modifications which I feel will improve its usability.
+
+<div style="color:#ffd100"><strong>Compatible with both <em>Retail WoW</em> and <em>WoW: Forever</em></strong></div>
 
 **Original Developers**
 -  <!-- -->daniel@pew.cc
@@ -19,9 +21,9 @@ Feedback on this AddOn or any others that I develop/maintain is always welcome. 
 **Incognito2** adds you name in front of your chat messages. Can be enabled for guild (and officer), party, raid, and chat channel messages.
 
 **Example**
-<span  style="color:#1eff00">[Guild][Pranavius]: Hello, world!</span>
+<span style="color:#1eff00">[Guild][Pranavius]: Hello, world!</span>
 becomes
-<span  style="color:#1eff00">[Guild][Pranavius]: (Pran): Hello, world!
+<span style="color:#1eff00">[Guild][Pranavius]: (Pran): Hello, world!</span>
 
 ## Usage
 You can use the options window to modify all available options. Alternatively, you can utilize the slash commands `/incognito` or `/inc` to make quick changes.
